@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deixe seu Feedback</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h2>📬 Queremos te ouvir!</h2>
+    <p>Tem alguma sugestão, dúvida ou elogio? Envie aqui, sua opinião é super bem-vinda 💚</p>
+    <form method="POST">
+      <label for="nome">Nome (opcional):</label>
+      <input type="text" id="nome" name="nome"><br><br>
+
+      <label for="tipo">Tipo de feedback:</label>
+      <select id="tipo" name="tipo" required>
+        <option value="Sugestão">Sugestão</option>
+        <option value="Elogio">Elogio</option>
+        <option value="Dúvida">Dúvida</option>
+      </select><br><br>
+
+      <label for="mensagem">Sua mensagem:</label><br>
+      <textarea id="mensagem" name="mensagem" rows="4" cols="40" required></textarea><br><br>
+
+      <input type="submit" value="Enviar">
+    </form>
+
+    {% if resposta %}
+      <p class="resultado-positivo"><strong>{{ resposta }}</strong></p>
+    {% endif %}
+
+    <br>
+    <a href="/">⬅️ Voltar ao Início</a>
+  </div>
+</body>
+</html>

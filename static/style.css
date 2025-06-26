@@ -1,0 +1,130 @@
+/* Layout geral */
+body {
+  margin: 0;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* Caixa centralizada */
+.card {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Títulos e textos */
+h1, h2 {
+  color: #1a8c73;
+  margin-bottom: 15px;
+}
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: #1a8c73;
+  text-decoration: none;
+  font-weight: 600;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Formulário */
+form {
+  margin-top: 20px;
+}
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+input[type="number"],
+input[type="submit"],
+input[type="radio"] {
+  margin-bottom: 16px;
+}
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+input[type="submit"] {
+  background-color: #1a8c73;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+input[type="submit"]:hover {
+  background-color: #166d5c;
+}
+
+/* Lista de links da página inicial */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+li {
+  margin-bottom: 12px;
+}
+
+/* Responsividade para celular */
+@media screen and (max-width: 600px) {
+  .card {
+    padding: 20px;
+  }
+  h1, h2 {
+    font-size: 1.4em;
+  }
+}
+.resultado-positivo {
+  color: #1a8c73;
+  font-weight: bold;
+}
+
+.resultado-negativo {
+  color: #e63946;
+  font-weight: bold;
+}
+
+.resultado-neutro {
+  color: #555;
+  font-weight: bold;
+}
+.resultado-positivo {
+  color: #1a8c73;
+  font-weight: bold;
+  background-color: #e7f8f3;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 6px solid #1a8c73;
+  animation: aparecer 0.4s ease-in-out;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

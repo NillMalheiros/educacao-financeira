@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Financeiro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h2>🧠 Quiz de Educação Financeira</h2>
+    <form method="POST">
+      <p><strong>1. O que é orçamento?</strong></p>
+      <label><input type="radio" name="p1" value="a" required> Uma conta bancária</label><br>
+      <label><input type="radio" name="p1" value="b"> Planejamento de receitas e despesas</label><br>
+      <label><input type="radio" name="p1" value="c"> Um título de investimento</label><br><br>
+
+      <p><strong>2. Qual é um exemplo de gasto variável?</strong></p>
+      <label><input type="radio" name="p2" value="a" required> Aluguel</label><br>
+      <label><input type="radio" name="p2" value="b"> Mensalidade escolar</label><br>
+      <label><input type="radio" name="p2" value="c"> Lazer e alimentação fora de casa</label><br><br>
+
+      <p><strong>3. Para que serve uma reserva de emergência?</strong></p>
+      <label><input type="radio" name="p3" value="a" required> Imprevistos e emergências</label><br>
+      <label><input type="radio" name="p3" value="b"> Comprar presentes</label><br>
+      <label><input type="radio" name="p3" value="c"> Gastos supérfluos</label><br><br>
+
+      <input type="submit" value="Enviar Respostas">
+    </form>
+
+    {% if acertos is not none %}
+      <div class="{{ classe }}">
+        <p><strong>Você acertou {{ acertos }} de 3 perguntas.</strong></p>
+        <p>{{ mensagem }}</p>
+        <a href="/quiz"><button type="button">🔁 Tentar novamente</button></a>
+      </div>
+    {% endif %}
+
+    <br>
+    <a href="/">⬅️ Voltar ao Início</a>
+  </div>
+</body>
+</html>

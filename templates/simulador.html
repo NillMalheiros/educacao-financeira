@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulador de Orçamento</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h2>🧮 Simulador de Orçamento Pessoal</h2>
+    <form method="POST">
+      <label for="receita">Receita Mensal (R$):</label><br>
+      <input id="receita" type="number" step="0.01" name="receita" required><br><br>
+
+      <label for="despesas">Despesas Mensais (R$):</label><br>
+      <input id="despesas" type="number" step="0.01" name="despesas" required><br><br>
+
+      <input type="submit" value="Calcular">
+    </form>
+
+    {% if resultado %}
+      <p><strong>{{ resultado }}</strong></p>
+    {% endif %}
+
+    <a href="/">⬅️ Voltar ao Início</a>
+  </div>
+</body>
+</html>
