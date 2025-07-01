@@ -3,10 +3,12 @@ from funcoes_financeiras import simulador_orcamento, calcular_acertos_quiz
 
 app = Flask(__name__)
 
+# Rota da página inicial
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Rota para o simulador de orçamento
 @app.route('/simulador', methods=['GET', 'POST'])
 def simulador():
     resultado = None
@@ -32,6 +34,7 @@ def simulador():
             resultado = f"Ocorreu um erro: {str(e)}"
     return render_template('simulador.html', resultado=resultado, classe=classe)
 
+# Rota para o quiz financeiro
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
     acertos = None
@@ -62,6 +65,7 @@ def quiz():
 
     return render_template('quiz.html', acertos=acertos, mensagem=mensagem, classe=classe)
 
+# Rota para o formulário de feedback — sem salvar em arquivo (evita erro 500 no Render)
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     resposta = None
@@ -70,14 +74,11 @@ def feedback():
         tipo = request.form.get('tipo')
         mensagem = request.form.get('mensagem')
 
-        try:
-            with open('feedback.csv', 'a', encoding='utf-8') as arquivo:
-                arquivo.write(f"{nome},{tipo},\"{mensagem.strip()}\"\n")
-            resposta = "Obrigada pelo seu feedback! 💌"
-        except Exception as e:
-            resposta = f"Ocorreu um erro ao salvar seu feedback: {str(e)}"
+        # Apenas responde com mensagem de agradecimento — sem salvar
+        resposta = "Obrigada pelo seu feedback! 💌"
 
     return render_template('feedback.html', resposta=resposta)
 
+# Inicialização do app para testes locais
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True)
