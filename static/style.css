@@ -1,4 +1,4 @@
-/* Layout geral */
+/* 🌿 Layout geral */
 body {
   margin: 0;
   padding: 40px 20px;
@@ -11,7 +11,7 @@ body {
   min-height: 100vh;
 }
 
-/* Caixa centralizada */
+/* 🧾 Caixa centralizada */
 .card {
   background-color: #ffffff;
   padding: 30px;
@@ -21,47 +21,57 @@ body {
   width: 100%;
 }
 
-/* Títulos e textos */
-h1, h2 {
+/* 🖋️ Títulos e textos */
+h1, h2, h3 {
   color: #1a8c73;
   margin-bottom: 15px;
 }
+
 p {
   font-size: 1rem;
   line-height: 1.6;
 }
 
-/* Links */
+/* 🔗 Links */
 a {
   color: #1a8c73;
   text-decoration: none;
   font-weight: 600;
 }
+
 a:hover {
   text-decoration: underline;
 }
 
-/* Formulário */
+/* 🧮 Formulários */
 form {
   margin-top: 20px;
 }
+
 label {
   font-weight: 600;
   display: block;
   margin-bottom: 5px;
 }
+
 input[type="number"],
 input[type="submit"],
-input[type="radio"] {
+input[type="radio"],
+input[type="text"],
+textarea {
   margin-bottom: 16px;
 }
-input[type="number"] {
+
+input[type="number"],
+input[type="text"],
+textarea {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
+
 input[type="submit"] {
   background-color: #1a8c73;
   color: white;
@@ -72,52 +82,53 @@ input[type="submit"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 input[type="submit"]:hover {
   background-color: #166d5c;
 }
 
-/* Lista de links da página inicial */
+/* 📋 Lista de links */
 ul {
   list-style-type: none;
   padding-left: 0;
 }
+
 li {
   margin-bottom: 12px;
 }
 
-/* Responsividade para celular */
-@media screen and (max-width: 600px) {
-  .card {
-    padding: 20px;
-  }
-  h1, h2 {
-    font-size: 1.4em;
-  }
-}
+/* ✅ Resultados e mensagens */
 .resultado-positivo {
   color: #1a8c73;
-  font-weight: bold;
-}
-
-.resultado-negativo {
-  color: #e63946;
-  font-weight: bold;
-}
-
-.resultado-neutro {
-  color: #555;
-  font-weight: bold;
-}
-.resultado-positivo {
-  color: #1a8c73;
-  font-weight: bold;
   background-color: #e7f8f3;
   padding: 10px;
   border-radius: 6px;
   border-left: 6px solid #1a8c73;
+  font-weight: bold;
   animation: aparecer 0.4s ease-in-out;
 }
 
+.resultado-negativo {
+  color: #e63946;
+  background-color: #fbeaea;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 6px solid #e63946;
+  font-weight: bold;
+  animation: aparecer 0.4s ease-in-out;
+}
+
+.resultado-neutro {
+  color: #555;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 6px solid #999;
+  font-weight: bold;
+  animation: aparecer 0.4s ease-in-out;
+}
+
+/* ✨ Animação */
 @keyframes aparecer {
   from {
     opacity: 0;
@@ -127,4 +138,91 @@ li {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 💬 Estilo dos depoimentos */
+.depoimento {
+  background-color: #f9f9f9;
+  border-left: 5px solid #1a8c73;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  animation: aparecer 0.4s ease-in-out;
+}
+
+.depoimento .assinatura {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* 🟢 Grade de cards no blog */
+.grade-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card-feedback {
+  background-color: #e7f8f3;
+  border: 2px solid #1a8c73;
+  padding: 16px;
+  border-radius: 8px;
+  min-height: 120px;
+  animation: aparecer 0.4s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-feedback:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.card-feedback span {
+  display: block;
+  margin-top: 8px;
+  color: #166d5c;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* 📱 Responsividade para celular */
+@media screen and (max-width: 600px) {
+  .card {
+    padding: 20px;
+  }
+
+  h1, h2 {
+    font-size: 1.4em;
+  }
+
+  .grade-cards {
+    grid-template-columns: 1fr;
+  }
+}
+.menu-superior {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.menu-superior a {
+  color: #1a8c73;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.menu-superior a:hover {
+  color: #166d5c;
+  text-decoration: underline;
+}
+h2, h3, .card p:first-of-type {
+  text-align: center;
+}
+.depoimento:last-of-type {
+  margin-bottom: 30px;
 }

@@ -3,12 +3,12 @@ from funcoes_financeiras import simulador_orcamento, calcular_acertos_quiz
 
 app = Flask(__name__)
 
-# Rota da página inicial
+# 🏠 Página inicial
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Rota para o simulador de orçamento
+# 🧮 Simulador de Orçamento
 @app.route('/simulador', methods=['GET', 'POST'])
 def simulador():
     resultado = None
@@ -30,11 +30,14 @@ def simulador():
                 classe = "resultado-neutro"
         except ValueError:
             resultado = "Dados inválidos. Por favor, insira números válidos."
+            classe = "resultado-negativo"
         except Exception as e:
             resultado = f"Ocorreu um erro: {str(e)}"
+            classe = "resultado-negativo"
+    
     return render_template('simulador.html', resultado=resultado, classe=classe)
 
-# Rota para o quiz financeiro
+# 🧠 Quiz Financeiro
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
     acertos = None
@@ -65,7 +68,7 @@ def quiz():
 
     return render_template('quiz.html', acertos=acertos, mensagem=mensagem, classe=classe)
 
-# Rota para o formulário de feedback — sem salvar em arquivo (evita erro 500 no Render)
+# 📬 Feedback dos usuários
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     resposta = None
@@ -74,11 +77,26 @@ def feedback():
         tipo = request.form.get('tipo')
         mensagem = request.form.get('mensagem')
 
-        # Apenas responde com mensagem de agradecimento — sem salvar
-        resposta = "Obrigada pelo seu feedback! 💌"
+        if not mensagem.strip():
+            resposta = "Por favor, escreva uma mensagem válida."
+        else:
+            resposta = "Obrigada pelo seu feedback! 💌"
 
     return render_template('feedback.html', resposta=resposta)
 
-# Inicialização do app para testes locais
+# 📝 Avaliação Final (com Google Forms)
+@app.route('/avaliacao')
+def avaliacao():
+    return render_template('avaliacao.html')
+
+# 💬 Blog da Plataforma
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+@app.route("/sobre")
+def sobre():
+    return render_template("sobre.html")
+
+# 🚀 Inicialização do app
 if __name__ == '__main__':
     app.run(debug=True)
