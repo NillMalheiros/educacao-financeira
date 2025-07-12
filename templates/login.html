@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Painel de Feedback</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="menu-superior">
+    <a href="/">🏠 Início</a> |
+    <a href="/sobre">📚 Sobre</a> |
+    <a href="/blog">💬 Blog</a>
+  </nav>
+
+  <div class="card">
+    <h2>🔐 Acesso ao Painel</h2>
+    <p>Digite seu usuário e senha para visualizar o mural de feedbacks.</p>
+
+    <form method="POST">
+      <label for="usuario">Usuário:</label><br>
+      <input type="text" id="usuario" name="usuario" required><br><br>
+
+      <label for="senha">Senha:</label><br>
+      <input type="password" id="senha" name="senha" required><br><br>
+
+      <input type="submit" value="Entrar">
+    </form>
+
+    {% if erro %}
+      <p class="resultado-negativo"><strong>{{ erro }}</strong></p>
+    {% endif %}
+
+    <br>
+    <a href="/" class="botao-reiniciar">⬅️ Voltar ao Início</a>
+  </div>
+</body>
+</html>

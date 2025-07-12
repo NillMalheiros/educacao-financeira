@@ -1,41 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <nav class="menu-superior">
-  <a href="/">🏠 Início</a> |
-  <a href="/sobre">📚 Sobre</a> |
-  <a href="/blog">💬 Blog</a>
-</nav>
+  <meta charset="UTF-8">
   <title>Deixe seu Feedback</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
+  <!-- Navegação -->
+  <nav class="menu-superior">
+    <a href="/">🏠 Início</a> |
+    <a href="/sobre">📚 Sobre</a> |
+    <a href="/blog">💬 Blog</a>
+  </nav>
+
+  <!-- Conteúdo principal -->
   <div class="card">
     <h2>📬 Queremos te ouvir!</h2>
-    <p>Tem alguma sugestão, dúvida ou elogio? Envie aqui, sua opinião é super bem-vinda 💚</p>
-    <form method="POST">
+    <p>Tem alguma sugestão, dúvida ou elogio? Envie aqui — sua opinião é super bem-vinda 💚</p>
+
+    <!-- Formulário de Feedback -->
+    <form method="POST" action="/feedback">
       <label for="nome">Nome (opcional):</label>
-      <input type="text" id="nome" name="nome"><br><br>
+      <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
 
       <label for="tipo">Tipo de feedback:</label>
       <select id="tipo" name="tipo" required>
+        <option value="" disabled selected>Selecione...</option>
         <option value="Sugestão">Sugestão</option>
         <option value="Elogio">Elogio</option>
         <option value="Dúvida">Dúvida</option>
-      </select><br><br>
+      </select>
 
-      <label for="mensagem">Sua mensagem:</label><br>
-      <textarea id="mensagem" name="mensagem" rows="4" cols="40" required></textarea><br><br>
+      <label for="mensagem">Sua mensagem:</label>
+      <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva aqui..." required></textarea>
 
       <input type="submit" value="Enviar">
     </form>
 
+    <!-- Mensagem de retorno -->
     {% if resposta %}
       <p class="resultado-positivo"><strong>{{ resposta }}</strong></p>
     {% endif %}
 
     <br>
-    <a href="/">⬅️ Voltar ao Início</a>
+    <a href="/" class="botao-reiniciar">⬅️ Voltar ao Início</a>
   </div>
+
+</body>
+</html>```
+
+### Versão Corrigida e Melhorada (com Boas Práticas)
+
+Aqui está a versão com algumas melhorias sutis e comentários explicando cada uma delas.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <!-- SUGESTÃO: Adicionar a viewport meta tag para responsividade em dispositivos móveis -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deixe seu Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- SUGESTÃO: Usar a tag <header> para o cabeçalho da página, que contém a navegação -->
+    <header>
+        <nav class="menu-superior">
+            <a href="/">🏠 Início</a> |
+            <a href="/sobre">📚 Sobre</a> |
+            <a href="/blog">💬 Blog</a>
+        </nav>
+    </header>
+
+    <!-- SUGESTÃO: Usar a tag <main> para o conteúdo principal da página -->
+    <main>
+        <div class="card">
+            <h2>📬 Queremos te ouvir!</h2>
+            <p>Tem alguma sugestão, dúvida ou elogio? Envie aqui — sua opinião é super bem-vinda 💚</p>
+
+            <!-- Formulário de Feedback -->
+            <!-- O atributo 'action' já está correto, não precisa de mudanças -->
+            <form method="POST" action="/feedback">
+                
+                <label for="nome">Nome (opcional):</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" autocomplete="name">
+
+                <label for="tipo">Tipo de feedback:</label>
+                <select id="tipo" name="tipo" required>
+                    <!-- A opção desabilitada e selecionada por padrão é uma ótima prática -->
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="Sugestão">Sugestão</option>
+                    <option value="Elogio">Elogio</option>
+                    <option value="Dúvida">Dúvida</option>
+                </select>
+
+                <label for="mensagem">Sua mensagem:</label>
+                <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva aqui..." required></textarea>
+
+                <!-- SUGESTÃO: Usar a tag <button> para o botão de envio. É mais flexível que <input type="submit"> -->
+                <button type="submit">Enviar</button>
+            </form>
+
+            <!-- Mensagem de retorno -->
+            {% if resposta %}
+                <!-- SUGESTÃO: Usar uma div para a mensagem de resposta, o que dá mais flexibilidade de estilo -->
+                <div class="feedback-resposta resultado-positivo">
+                    <p><strong>{{ resposta }}</strong></p>
+                </div>
+            {% endif %}
+
+            <br>
+            <a href="/" class="botao-reiniciar">⬅️ Voltar ao Início</a>
+        </div>
+    </main>
+
 </body>
 </html>

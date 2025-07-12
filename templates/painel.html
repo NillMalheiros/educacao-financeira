@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Feedback</title>
+</head>
+<body>
+  <h1>Mural de Feedbacks 💬</h1>
+
+  {% if feedbacks %}
+    <ul>
+      {% for item in feedbacks %}
+        <li>
+          <strong>{{ item.nome }}</strong> ({{ item.tipo }}): {{ item.mensagem }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Nenhum feedback recebido ainda.</p>
+  {% endif %}
+</body>
+</html>

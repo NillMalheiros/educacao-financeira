@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: educacao-financeira # Você pode mudar este nome
+    env: python
+    plan: free # Usa o plano gratuito do Render
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11 # Use a versão do Python com a qual você desenvolveu
+      - key: SECRET_KEY
+        generateValue: true # Pede ao Render para criar uma chave secreta segura

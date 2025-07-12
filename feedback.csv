@@ -1,1 +1,145 @@
-,Sugestão,"Agradeço pelo empenho por trazer uma plataforma bastante interativa e de muita relevância para a comunidade."
+# app.py (ou o nome do seu arquivo principal)
+
+from flask import Flask, render_template, request, escape
+import os
+# A biblioteca 'gunicorn' não precisa ser importada aqui, 
+# mas deve estar no seu arquivo requirements.txt
+
+app = Flask(__name__)
+
+# É uma boa prática definir uma chave secreta, especialmente para produção.
+# O Render permite configurar isso como uma variável de ambiente.
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
+
+# ------------------------
+# 💌 Armazenamento de Feedbacks
+# ------------------------
+# IMPORTANTE PARA O DEPLOY:
+# A lista em memória foi removida. Em um ambiente de produção como o Render,
+# os dados em memória são perdidos a cada reinicialização do servidor.
+# Para uma aplicação real, você deveria usar um banco de dados (como o PostgreSQL gratuito do Render)
+# ou um serviço de armazenamento de arquivos.
+#
+# Para este exemplo, vamos manter a funcionalidade de feedback, mas com a ressalva
+# de que os dados não serão persistentes. A rota /painel foi removida para evitar confusão.
+# ------------------------
+
+# (Variável mantida apenas para o código não quebrar, mas não é uma solução de produção)
+feedbacks_recebidos = [] 
+
+# ------------------------
+# 🌐 Rotas de Navegação
+# ------------------------
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/sobre')
+def sobre():
+    return render_template('sobre.html')
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/avaliacao')
+def avaliacao():
+    return render_template('avaliacao.html')
+
+# ------------------------
+# 💰 Simulador de Orçamento
+# ------------------------
+
+@app.route('/simulador', methods=['GET', 'POST'])
+def simulador():
+    resultado = None
+    classe = "resultado-neutro"
+    if request.method == 'POST':
+        try:
+            receita = float(request.form.get('receita', '0'))
+            despesas = float(request.form.get('despesas', '0'))
+            # Presume-se que a função simulador_orcamento existe em funcoes_financeiras.py
+            from funcoes_financeiras import simulador_orcamento
+            resultado, classe = simulador_orcamento(receita, despesas)
+        except ValueError:
+            resultado = "Dados inválidos. Por favor, insira apenas números."
+            classe = "resultado-negativo"
+        except Exception as e:
+            print(f"Erro no simulador: {e}") # Log do erro no console do Render
+            resultado = "Ocorreu um erro inesperado. Tente novamente."
+            classe = "resultado-negativo"
+    return render_template('simulador.html', resultado=resultado, classe=classe)
+
+# ------------------------
+# 🧠 Quiz Financeiro
+# ------------------------
+
+@app.route('/quiz', methods=['GET', 'POST'])
+def quiz():
+    acertos = None
+    mensagem = ""
+    classe = ""
+    if request.method == 'POST':
+        try:
+            respostas = {
+                'p1': request.form.get('p1', '').strip().lower(),
+                'p2': request.form.get('p2', '').strip().lower(),
+                'p3': request.form.get('p3', '').strip().lower(),
+            }
+            # Presume-se que a função calcular_acertos_quiz existe em funcoes_financeiras.py
+            from funcoes_financeiras import calcular_acertos_quiz
+            acertos = calcular_acertos_quiz(respostas)
+
+            if acertos == 3:
+                mensagem = "Show! Você domina o assunto! 🎉"
+                classe = "resultado-positivo"
+            elif acertos == 2:
+                mensagem = "Muito bem! Falta pouco pra dominar 💪"
+                classe = "resultado-neutro"
+            else:
+                mensagem = "Sem stress! Vamos melhorar juntas! 🌱"
+                classe = "resultado-negativo"
+        except Exception as e:
+            print(f"Erro no quiz: {e}") # Log do erro
+            mensagem = "Ocorreu um erro ao processar o quiz."
+            classe = "resultado-negativo"
+    return render_template('quiz.html', acertos=acertos, mensagem=mensagem, classe=classe)
+
+# ------------------------
+# 📬 Feedback dos Usuários
+# ------------------------
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    resposta = None
+    if request.method == 'POST':
+        try:
+            # Usar escape para segurança contra ataques XSS
+            nome = escape(request.form.get('nome', 'Anônimo').strip())
+            tipo = escape(request.form.get('tipo', 'Não informado'))
+            mensagem = escape(request.form.get('mensagem', '').strip())
+
+            if not mensagem:
+                resposta = "Por favor, escreva uma mensagem válida."
+            else:
+                # AVISO: Este feedback será perdido na próxima reinicialização do servidor.
+                feedbacks_recebidos.append({'nome': nome or 'Anônimo', 'tipo': tipo, 'mensagem': mensagem})
+                resposta = "Obrigada pelo seu feedback! 💌"
+                # O print() aparecerá nos logs do Render, o que é ótimo para depuração.
+                print(f"✅ Feedback recebido: {nome}, {tipo}, {mensagem}")
+        except Exception as e:
+            print(f"Erro no feedback: {e}")
+            resposta = "Ocorreu um erro ao salvar seu feedback."
+    return render_template('feedback.html', resposta=resposta)
+
+# ------------------------
+# 🚀 Inicialização do Servidor (REMOVIDO PARA PRODUÇÃO)
+# ------------------------
+# A seção abaixo é usada apenas para desenvolvimento local.
+# O Render usará o Gunicorn para iniciar a aplicação, então este bloco não será executado lá.
+if __name__ == '__main__':
+    # Use uma porta diferente de 5000 se ela estiver em uso no seu sistema
+    port = int(os.environ.get('PORT', 5001)) 
+    # debug=True é ótimo para desenvolver, mas NUNCA deve ser usado em produção.
+    app.run(debug=True, host='0.0.0.0', port=port)

@@ -1,13 +1,28 @@
-from flask import Flask, render_template, request
-from funcoes_financeiras import simulador_orcamento, calcular_acertos_quiz
+# --------------------------------------------------------------------------
+# app.py - Versão Final para Deploy
+# --------------------------------------------------------------------------
+
 import os
+from flask import Flask, render_template, request
+from markupsafe import escape
+
+# Tenta importar as funções. Se o arquivo não existir, usa funções placeholder.
+try:
+    from funcoes_financeiras import simulador_orcamento, calcular_acertos_quiz
+except ImportError:
+    print("AVISO: Arquivo 'funcoes_financeiras.py' não encontrado. Usando funções de exemplo.")
+    def simulador_orcamento(r, d): return ("Função de simulação não encontrada", "resultado-negativo")
+    def calcular_acertos_quiz(respostas): return 0
 
 app = Flask(__name__)
 
-# ------------------------
-# 🌐 Rotas de Navegação
-# ------------------------
+# Configuração de segurança essencial para produção.
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'uma-chave-secreta-padrao-para-desenvolvimento')
 
+# AVISO: Esta lista em memória será reiniciada a cada deploy no Render.
+feedbacks_recebidos = []
+
+# --- Rotas de Navegação ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -24,104 +39,64 @@ def blog():
 def avaliacao():
     return render_template('avaliacao.html')
 
-# ------------------------
-# 💰 Simulador de Orçamento
-# ------------------------
-
+# --- Rotas de Funcionalidades ---
 @app.route('/simulador', methods=['GET', 'POST'])
 def simulador():
-    resultado = None
-classe = "resultado-neutro"
-if request.method == 'POST':
-    try:
-        receita = float(request.form.get('receita') or 0)
-        despesas = float(request.form.get('despesas') or 0)
-        resultado, classe = simulador_orcamento(receita, despesas)
-    except ValueError:
-        resultado = "Dados inválidos. Por favor, insira números válidos."
-        classe = "resultado-negativo"
-    except Exception as e:
-        resultado = f"Ocorreu um erro inesperado: {str(e)}"
-        classe = "resultado-negativo"
-            else:
-                resultado = "Você gastou exatamente o que ganhou. Fique atenta nos próximos meses."
-
+    resultado, classe = None, "resultado-neutro"
+    if request.method == 'POST':
+        try:
+            receita = float(request.form.get('receita', '0'))
+            despesas = float(request.form.get('despesas', '0'))
+            resultado, classe = simulador_orcamento(receita, despesas)
         except ValueError:
-            resultado = "Dados inválidos. Por favor, insira números válidos."
-            classe = "resultado-negativo"
+            resultado, classe = "Dados inválidos. Insira apenas números.", "resultado-negativo"
         except Exception as e:
-            resultado = f"Ocorreu um erro inesperado: {str(e)}"
-            classe = "resultado-negativo"
-
+            print(f"Erro no simulador: {e}")
+            resultado, classe = "Ocorreu um erro inesperado.", "resultado-negativo"
     return render_template('simulador.html', resultado=resultado, classe=classe)
-
-# ------------------------
-# 🧠 Quiz Financeiro
-# ------------------------
 
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
-    acertos = None
-    mensagem = ""
-    classe = ""
-
+    acertos, mensagem, classe = None, "", ""
     if request.method == 'POST':
         try:
-            respostas = {
-                'p1': (request.form.get('p1') or '').strip().lower(),
-                'p2': (request.form.get('p2') or '').strip().lower(),
-                'p3': (request.form.get('p3') or '').strip().lower(),
-            }
+            respostas = {f'p{i}': request.form.get(f'p{i}', '').strip().lower() for i in range(1, 4)}
             acertos = calcular_acertos_quiz(respostas)
-
             if acertos == 3:
-                mensagem = "Show! Você domina o assunto! 🎉"
-                classe = "resultado-positivo"
+                mensagem, classe = "Show! Você domina o assunto! 🎉", "resultado-positivo"
             elif acertos == 2:
-                mensagem = "Muito bem! Falta pouco pra dominar 💪"
-                classe = "resultado-neutro"
+                mensagem, classe = "Muito bem! Falta pouco pra dominar 💪", "resultado-neutro"
             else:
-                mensagem = "Sem stress! Vamos melhorar juntas! 🌱"
-                classe = "resultado-negativo"
-
+                mensagem, classe = "Sem stress! Vamos melhorar juntas! 🌱", "resultado-negativo"
         except Exception as e:
-            mensagem = f"Erro ao calcular resultado: {str(e)}"
-            classe = "resultado-negativo"
-
+            print(f"Erro no quiz: {e}")
+            mensagem, classe = "Ocorreu um erro ao processar o quiz.", "resultado-negativo"
     return render_template('quiz.html', acertos=acertos, mensagem=mensagem, classe=classe)
-
-# ------------------------
-# 📬 Feedback dos Usuários
-# ------------------------
-
-@# ------------------------
-# 📬 Feedback dos Usuários
-# ------------------------
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     resposta = None
-
     if request.method == 'POST':
         try:
-            nome = request.form.get('nome', 'Anônimo')
-            tipo = request.form.get('tipo')
-            mensagem = request.form.get('mensagem')
-
-            if not mensagem or not mensagem.strip():
+            nome = escape(request.form.get('nome', 'Anônimo').strip()) or "Anônimo"
+            tipo = escape(request.form.get('tipo', 'Outro'))
+            mensagem = escape(request.form.get('mensagem', '').strip())
+            if not mensagem:
                 resposta = "Por favor, escreva uma mensagem válida."
             else:
+                feedbacks_recebidos.append({'nome': nome, 'tipo': tipo, 'mensagem': mensagem})
                 resposta = "Obrigada pelo seu feedback! 💌"
-
+                print(f"✅ Feedback recebido: {nome}")
         except Exception as e:
-            resposta = f"Ocorreu um erro no envio: {str(e)}"
-
+            print(f"Erro no feedback: {e}")
+            resposta = "Ocorreu um erro ao salvar o feedback."
     return render_template('feedback.html', resposta=resposta)
 
-# ------------------------
-# 🚀 Inicialização do App
-# ------------------------
+@app.route('/painel')
+def painel():
+    return render_template('painel.html', feedbacks=feedbacks_recebidos)
 
+# --- Bloco de Execução (Apenas para desenvolvimento local) ---
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

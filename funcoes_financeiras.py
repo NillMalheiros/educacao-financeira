@@ -1,20 +1,28 @@
 def simulador_orcamento(receita, despesas):
+    """Calcula o saldo do orçamento e retorna uma mensagem e uma classe CSS."""
     saldo = receita - despesas
     if saldo > 0:
-        return f"Parabéns! Você economizou R$ {saldo:.2f} este mês."
-    elif saldo == 0:
-        return "Atenção! Você gastou exatamente o que ganhou."
+        resultado = f"Seu saldo está positivo em R$ {saldo:.2f}! Ótimo trabalho! 👏"
+        classe = "resultado-positivo"
+    elif saldo < 0:
+        resultado = f"Seu saldo está negativo em R$ {abs(saldo):.2f}. Vamos ajustar! 💪"
+        classe = "resultado-negativo"
     else:
-        return f"Cuidado! Você gastou R$ {-saldo:.2f} a mais do que ganhou."
+        resultado = "Seu orçamento está equilibrado. Cuidado para não negativar!"
+        classe = "resultado-neutro"
+    return resultado, classe
 
 def calcular_acertos_quiz(respostas):
-    gabarito = {
-        'p1': 'b',
-        'p2': 'c',
-        'p3': 'a'
-    }
+    """Calcula o número de respostas corretas no quiz."""
     acertos = 0
-    for pergunta, resposta in respostas.items():
-        if resposta == gabarito.get(pergunta):
+    gabarito = {
+        'p1': 'c',  # Exemplo: resposta correta da pergunta 1 é 'c'
+        'p2': 'a',  # Exemplo: resposta correta da pergunta 2 é 'a'
+        'p3': 'b'   # Exemplo: resposta correta da pergunta 3 é 'b'
+    }
+    # Adapte o gabarito acima para as respostas corretas do seu quiz!
+
+    for pergunta, resposta_correta in gabarito.items():
+        if respostas.get(pergunta) == resposta_correta:
             acertos += 1
     return acertos
